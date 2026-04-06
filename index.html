@@ -973,16 +973,12 @@ async function sendDirectMessage() {
   var btn = document.getElementById('btn-send-msg');
   btn.disabled = true;
   btn.textContent = 'กำลังส่ง...';
-  var payload = {
-    type: 'direct_message',
-    name: formData.name || '',
-    company: formData.company || '',
-    phone: formData.phone || '',
-    line: formData.line || '',
-    tier: formData.tier || '',
+  // Single path — no type branching, send all available formData + message
+  var payload = Object.assign({}, formData, {
     message: msg,
-    sentAt: new Date().toISOString()
-  };
+    source_page: 'intake-form-v2-dm',
+    submittedAt: new Date().toISOString()
+  });
   if (!MOCK_MODE) {
     try {
       await fetch(N8N_WEBHOOK_URL, {
